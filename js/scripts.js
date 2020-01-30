@@ -1,64 +1,71 @@
 
+function Player(roll, sum) {
+    this.roll = roll;
+    this.sum = sum;
+}
+//  Function when dice is rolled
 
-// Generate random number
+Player.prototype.rollDice = function () {
 
-var min = parseInt(1);
-var max = parseInt(7);
-var random = Math.floor(Math.random()*(max - min) + min);
+    var randomNumb = Math.floor((Math.random() * 6) + 1);
+    console.log(randomNumb);
+    this.roll = randomNumb;
+    if (randomNumb > 1) {
+        this.sum += randomNumb;
+    } else {
+        this.sum = 0;
+        $("#rollme_1").prop("disabled", true);
+        $("#result_1").text("0");
+        $("#rollme_2").prop("disabled", true);
+        $("#result_2").text("0");
 
+    }
+}
+$(document).ready(function () {
+    var roll = parseInt(0);
+    var sum = parseInt(0);
+    var player_1 = new Player(roll, sum);
 
+    $("#rollme_1").click(function () {
+        player_1.rollDice();
+        $("#rollValue_1").text(player_1.roll);
+        $(".rollSum_1").text(player_1.sum);
 
-
-
-
-
-
-
-
-
-
-$(document).ready(function(){
-    $("#roll").submit(function(){
-        $("#currentRoll").text(`1`);
     });
-    $("form#formOne").submit(function(event){
-        event.preventDefault();
-       //  var number = $("input#formOne").valueOf();
-        
-        var min = parseInt(1);
-        var max = parseInt(7);
-        var random = Math.floor(Math.random()*(max - min) + min);
-       //  $("#result").text(" " + sum + random);
-        var sum = parseInt(0);
-        for (var i= 0; i<=random; i++){
-            if  (i>1 && i <7){
-                sum+=i;
-                console.log(i);
-                console.log(sum);
-            } else if (random===1) {
-                console.log(random);
-                $(".alert").text("Player 2 turn");
-                $(".alert").show();
-                sum+=0;
-               
-                break;
-                
-             } 
+    $("#hold_1").click(function () {
+        $("#rollme_1").prop("disabled", true);
+        $("#result_1").text(player_1.sum);
+    });
+    var player_2 = new Player(roll, sum);
+    $("#rollme_2").click(function () {
+        player_2.rollDice();
+        $("#rollValue_2").text(player_2.roll);
+        $(".rollSum_2").text(player_2.sum);
+        if (player_2.sum === 0) {
+            finalResult(player_1.sum, player_2.sum);
         }
-            
-        $("#result").text(" " + sum);
-    });
 
-//     $("form#formTwo").submit(function(event) {
-//         event.preventDefault();
-//         var sum = Math.floor(Math.random()*(7 - 1) + 1)
-//         console.log(sum)
-//             if (sum == 1) {
-//                 console.log("Sorry end of turn")
-//             } else {
-//                 console.log(sum)
-//             }
-        
-//         $("#resultTwo").text(" "+ sum);
-//     });
+    });
+    $("#hold_2").click(function () {
+        $("#rollme_2").prop("disabled", true);
+        $("#result_2").text(player_2.sum);
+        finalResult(player_1.sum, player_2.sum);
+    });
+    function finalResult(sum1, sum2) {
+        if (sum1 > sum2) {
+            $("#winner").text("Player-1");
+            $("#finalWinner").show();
+        } else if (sum2 > sum1) {
+            $("#winner").text("Player-2");
+            $("#finalWinner").show();
+        }
+    }
+
+
+
 });
+
+
+
+
+
